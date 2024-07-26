@@ -1,4 +1,5 @@
-import { Controller, Get, Header, HttpCode, HttpStatus, Param, Post, Redirect, Req, Res } from "@nestjs/common";
+// import { Body, Controller, Get, Header, HttpCode, HttpStatus, Param, Post, Redirect, Req, Res } from "@nestjs/common";
+import { Body, Controller, Get, Param, Post, Redirect, Req } from "@nestjs/common";
 import { Request, Response } from 'express';
 import { url } from "inspector";
 
@@ -7,8 +8,22 @@ interface VideoParams {
     name: string
 }
 
+interface VideoDTO {
+    name: string,
+    tag: string,
+    date: string
+}
+
 @Controller('/users')
 export class UsersController {
+    @Post('/video')
+    addVideo(@Body() requestData: VideoDTO) {
+        console.log(requestData.tag);
+        return {
+            success: true
+        }
+    }
+
     @Get('/videos/:id/:name')
     getvideos(@Param() params: VideoParams) {
         console.log(params.id);
