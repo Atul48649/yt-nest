@@ -1,9 +1,21 @@
-import { Controller, Get, Header, HttpCode, HttpStatus, Post, Redirect, Req, Res } from "@nestjs/common";
+import { Controller, Get, Header, HttpCode, HttpStatus, Param, Post, Redirect, Req, Res } from "@nestjs/common";
 import { Request, Response } from 'express';
 import { url } from "inspector";
 
+interface VideoParams {
+    id: number,
+    name: string
+}
+
 @Controller('/users')
 export class UsersController {
+    @Get('/videos/:id/:name')
+    getvideos(@Param() params: VideoParams) {
+        console.log(params.id);
+        console.log(params.name);
+        return 'Success'
+    }
+
     @Get('/profile')
     getprofile(@Req() req: Request) {
         console.log(req.params);
