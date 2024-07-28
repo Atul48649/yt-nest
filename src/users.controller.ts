@@ -1,86 +1,43 @@
 // import { Body, Controller, Get, Header, HttpCode, HttpStatus, Param, Post, Redirect, Req, Res } from "@nestjs/common";
-import { Body, Controller, Get, Param, Post, Redirect, Req } from "@nestjs/common";
-import { Request, Response } from 'express';
-import { url } from "inspector";
+import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { CreateUserDTO } from "./dto/index";
 
-interface VideoParams {
-    id: number,
-    name: string
-}
-
-interface VideoDTO {
-    name: string,
-    tag: string,
-    date: string
-}
+let USERS = [];
 
 @Controller('/users')
 export class UsersController {
-    @Post('/video')
-    addVideo(@Body() requestData: VideoDTO) {
-        console.log(requestData.tag);
-        return {
-            success: true
+    @Post()
+    addUser(@Body() createUserDto: CreateUserDTO) {
+        USERS.push(createUserDto)
+        return "User added";
+    }
+
+    @Get()
+    getUsers() {
+        return USERS;
+    }
+
+    @Get("/:id")
+    getUser(@Param('id') id: number) {
+        const user = USERS.filter((user) => user.id === +id)
+        console.log(user);
+        return user.length > 0 ? user : 'No user associated with this id'
+    }
+
+    @Put('/:id')
+    updateUser(@Param('id') id: number, @Body() updateUserDto: CreateUserDTO) {
+        const userIndex = USERS.findIndex((user) => +user.id === +id);
+        console.log(userIndex);
+        if (!userIndex) {
+            return;
         }
+        USERS[userIndex] = updateUserDto;
+        return;
     }
 
-    @Get('/videos/:id/:name')
-    getvideos(@Param() params: VideoParams) {
-        console.log(params.id);
-        console.log(params.name);
-        return 'Success'
-    }
-
-    @Get('/profile')
-    getprofile(@Req() req: Request) {
-        console.log(req.params);
-        return {
-            message: 'Hello, Atul'
-        }
-    }
-
-    @Post('/profile')
-    @Redirect('/users/account', 302)
-    // @Header('cache-control', 'none')
-    // @Header('X-name', 'Atul')
-    // @HttpCode(HttpStatus.NO_CONTENT) //this is used for setting status code explicitly
-    postProfile(@Req() req: Request) {
-        return {
-            message: 'Post'
-        }
-    }
-    // setting up response
-    // postProfile(@Req() req: Request, @Res() res: Response) {
-    //     res.status(201).json({
-    //         message: 'Post'
-    //     })
-    // }
-
-    @Get('/account')
-    redirectRoute() {
-        return 'Working account'
-    }
-
-    @Get('/redirect')
-    @Redirect('/users/account', 302)
-    getRedirect(@Req() req: Request) {
-        const random = (Math.random() * 10 + 1)
-        console.log(random);
-        if (random < 5) {
-            return {
-                url: '/users/account',
-                statusCode: 302
-            }
-        } else {
-            return {
-                url: '/users/wallet',
-                statusCode: 302
-            }
-        }
-    }
-
-    @Get('/wallet')
-    redirectWallet() {
-        return 'Working wallet'
+    @Delete('/:id')
+    deleteUser(@Param('id') id: number) {
+        USERS = USERS.filter(user => user.id !== +id)
+        return;
     }
 }
