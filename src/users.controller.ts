@@ -1,5 +1,5 @@
 // import { Body, Controller, Get, Header, HttpCode, HttpStatus, Param, Post, Redirect, Req, Res } from "@nestjs/common";
-import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Param, Post, Put } from "@nestjs/common";
 import { CreateUserDTO } from "./dto/index";
 import { UsersStore } from "./store/users.store";
 
@@ -8,10 +8,27 @@ let USERS = [];
 @Controller('/users')
 export class UsersController {
 
-    constructor(private store: UsersStore) {
-        console.log(this.store);
+    // Inject object provider
+    constructor(@Inject('ENV_CONFIG') private config: Record<string, any>) {
+        console.log(config);
     }
 
+    // Inject array of string provider
+    // constructor(@Inject('MAIL') private emails: string[]) {
+    //     console.log('emails: ', emails);
+    // }
+
+    // Inject string provider
+    // constructor(@Inject('DATABASE_NAME') private dbname: string) {
+    //     console.log(this.dbname);
+    // }
+
+    // standard dependency injection
+    // constructor(private store: UsersStore) {
+    //     console.log(this.store);
+    // }
+
+    // CRUD Operations
     // @Post()
     // addUser(@Body() createUserDto: CreateUserDTO) {
     //     USERS.push(createUserDto)
