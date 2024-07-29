@@ -1,43 +1,49 @@
 // import { Body, Controller, Get, Header, HttpCode, HttpStatus, Param, Post, Redirect, Req, Res } from "@nestjs/common";
 import { Body, Controller, Delete, Get, Param, Post, Put } from "@nestjs/common";
 import { CreateUserDTO } from "./dto/index";
+import { UsersStore } from "./store/users.store";
 
 let USERS = [];
 
 @Controller('/users')
 export class UsersController {
-    @Post()
-    addUser(@Body() createUserDto: CreateUserDTO) {
-        USERS.push(createUserDto)
-        return "User added";
+
+    constructor(private store: UsersStore) {
+        console.log(this.store);
     }
 
-    @Get()
-    getUsers() {
-        return USERS;
-    }
+    // @Post()
+    // addUser(@Body() createUserDto: CreateUserDTO) {
+    //     USERS.push(createUserDto)
+    //     return "User added";
+    // }
 
-    @Get("/:id")
-    getUser(@Param('id') id: number) {
-        const user = USERS.filter((user) => user.id === +id)
-        console.log(user);
-        return user.length > 0 ? user : 'No user associated with this id'
-    }
+    // @Get()
+    // getUsers() {
+    //     return USERS;
+    // }
 
-    @Put('/:id')
-    updateUser(@Param('id') id: number, @Body() updateUserDto: CreateUserDTO) {
-        const userIndex = USERS.findIndex((user) => +user.id === +id);
-        console.log(userIndex);
-        if (!userIndex) {
-            return;
-        }
-        USERS[userIndex] = updateUserDto;
-        return;
-    }
+    // @Get("/:id")
+    // getUser(@Param('id') id: number) {
+    //     const user = USERS.filter((user) => user.id === +id)
+    //     console.log(user);
+    //     return user.length > 0 ? user : 'No user associated with this id'
+    // }
 
-    @Delete('/:id')
-    deleteUser(@Param('id') id: number) {
-        USERS = USERS.filter(user => user.id !== +id)
-        return;
-    }
+    // @Put('/:id')
+    // updateUser(@Param('id') id: number, @Body() updateUserDto: CreateUserDTO) {
+    //     const userIndex = USERS.findIndex((user) => +user.id === +id);
+    //     console.log(userIndex);
+    //     if (!userIndex) {
+    //         return;
+    //     }
+    //     USERS[userIndex] = updateUserDto;
+    //     return;
+    // }
+
+    // @Delete('/:id')
+    // deleteUser(@Param('id') id: number) {
+    //     USERS = USERS.filter(user => user.id !== +id)
+    //     return;
+    // }
 }
